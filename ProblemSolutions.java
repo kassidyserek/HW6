@@ -1,7 +1,7 @@
 
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   KASS SEREK / COMP272 002
  *
  *   This java file contains the problem solutions for the methods lastBoulder,
  *   showDuplicates, and pair methods. You should utilize the Java Collection
@@ -64,11 +64,33 @@ public class ProblemSolutions {
      */
 
   public static int lastBoulder(int[] boulders) {
+      // initialize a max-heap to track the heaviest boulders
+      PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
 
-      //
-      // ADD YOUR CODE HERE - DO NOT FORGET TO ADD YOUR NAME / SECTION # ABOVE
-      //
-      return -1;
+      // add all boulder weights into the max-heap
+      for (int boulder : boulders) {
+          pq.offer(boulder);
+      }
+
+      // continue smashing the two heaviest boulders until there is at most one left
+      while (pq.size() > 1) {
+          // remove the two heaviest boulders
+          int first = pq.poll();
+          int second = pq.poll();
+
+          // if they are not equal, add the difference back into the heap
+          if (first != second) {
+              pq.offer(first - second);
+          }
+      }
+
+      // if no boulders are left return 0
+      if (pq.isEmpty()) {
+          return 0;
+        // otherwise return the last remaining boulder's weight
+      } else {
+          return pq.peek();
+      }
   }
 
 
@@ -90,12 +112,28 @@ public class ProblemSolutions {
      */
 
     public static ArrayList<String> showDuplicates(ArrayList<String> input) {
+        // create a map to count occurrences of each string in the input list
+        HashMap<String, Integer> countMap = new HashMap<>();
 
-        //
-        //  YOUR CODE GOES HERE
-        //
-        return new ArrayList<>();  // Make sure result is sorted in ascending order
+        // count the occurrences of each string and store them in the map
+        for (String str : input) {
+            countMap.put(str, countMap.getOrDefault(str, 0) + 1);
+        }
 
+        // create a list to hold strings that appear more than once
+        ArrayList<String> duplicates = new ArrayList<>();
+
+        // add strings with counts greater than 1 to the duplicates list
+        for (Map.Entry<String, Integer> entry : countMap.entrySet()) {
+            if (entry.getValue() > 1) {
+                duplicates.add(entry.getKey());
+            }
+        }
+
+        // sort the duplicates list in ascending order
+        Collections.sort(duplicates);
+
+        return duplicates;
     }
 
 
@@ -130,10 +168,34 @@ public class ProblemSolutions {
      */
 
     public static ArrayList<String> pair(int[] input, int k) {
+        // hashset to track numbers for finding pairs
+        HashSet<Integer> set = new HashSet<>();
 
-        //
-        //  YOUR CODE GOES HERE
-        //
-        return new ArrayList<>();  // Make sure returned lists is sorted as indicated above
+        // set to hold unique pairs in string format
+        Set<String> uniquePairs = new HashSet<>();
+
+        // iterate through each number in the input array
+        for (int num : input) {
+            // calculate the required complement to reach the sum k
+            int complement = k - num;
+
+            // if the complement is in the set, we have found a valid pair
+            if (set.contains(complement)) {
+                // determine the smaller and larger values for consistent pair formatting
+                int small = Math.min(num, complement);
+                int large = Math.max(num, complement);
+                // add the pair as a formatted string to uniquePairs to avoid duplicates
+                uniquePairs.add("(" + small + ", " + large + ")");
+            }
+            // add the current number to the set for future checks
+            set.add(num);
+        }
+
+        // convert the unique pairs set to a sorted list
+        ArrayList<String> result = new ArrayList<>(uniquePairs);
+        Collections.sort(result);
+
+        // return the sorted list of unique pairs
+        return result;
     }
 }
