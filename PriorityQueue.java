@@ -1,7 +1,7 @@
 
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   KASS SEREK / COMP272 002
  *
  *   Note, additional comments provided throughout this source code
  *   is for educational purposes
@@ -150,9 +150,17 @@ class PriorityQueue<E, P> {
      */
 
     public Node add(E e, P priority) {
+        // create a new node with the given value, priority, and its initial index
+        Node newNode = new Node(e, priority, tree.size());
 
-        // YOUR CODE GOES HERE
-        return null;
+        // add the new node to the end of the tree
+        tree.add(newNode);
+
+        // pull the new node up to restore the min-heap
+        pullUp(newNode.idx);
+
+        // return the newly added node
+        return newNode;
     }
 
 
@@ -167,8 +175,12 @@ class PriorityQueue<E, P> {
      */
 
     public boolean contains(E e) {
-
-        // ADD YOUR CODE HERE
+        // iterate through the nodes in the tree to check if any node's value matches 'e'
+        for (Node node : tree) {
+            if (node.value.equals(e) && node.isValid()) {
+                return true;
+            }
+        }
         return false;
     }
 
